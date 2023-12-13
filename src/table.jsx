@@ -1,11 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const Table = () => {
-    const [value, setValue] = useState("0")
+    const [showValue, setShowValue] = useState("0")
+    const [checkDot, setCheckDot] = useState(false)
+    const [checkPlus, setCheckPlus] = useState(false)
+    const [checkMinus, setCheckMinus] = useState(false)
 
     // 按下數字按鈕
     const clickValueBtn = (v) => {
-        setValue((pre) => {
+        setShowValue((pre) => {
             if (pre === "0") {
                 return v;
             } else {
@@ -16,21 +19,65 @@ const Table = () => {
 
     // 清除所有數值
     const cleanValue = () => {
-        setValue("0")
+        setShowValue("0")
+        setCheckDot(false)
+        setCheckPlus(false)
+        setCheckMinus(false)
     }
 
     // 清除最後一位數值
     const deleteValue = (v) => {
-        setValue(
+        // 若最後一位數是 . 
+        if (v[v.length - 1] === ".") {
+            setCheckDot(false)
+        }
+        // 若最後一位數是 +
+        if (v[v.length - 1] === "+") {
+            setCheckPlus(false)
+        }
+        // 若最後一位數是 -
+        if (v[v.length - 1] === "-") {
+            setCheckMinus(false)
+        }
+
+        setShowValue(
             v.length === 1 ? "0" : v.slice(0, -1)
         );
     }
 
+    // 添加小數點
+    const addDot = () => {
+        if (checkDot) {
+            return
+        } else {
+            setShowValue((pre) => pre + ".")
+            setCheckDot(true)
+        }
+    }
 
+    // 按下 + 按鈕
+    const plus = () => {
+        if (checkPlus) {
+            return
+        } else {
+            setShowValue((pre) => pre + "+")
+            setCheckPlus(true)
+        }
+    }
+
+    // 按下 - 按鈕
+    const minus = () => {
+        if (checkMinus) {
+            return
+        } else {
+            setShowValue((pre) => pre + "-")
+            setCheckMinus(true)
+        }
+    }
     return (
         <>
-            <div className='grid grid-cols-4 items-center mt-40  w-fit mx-auto p-4 text-center relative'>
-                <p className=" absolute -top-5 right-5 text-2xl font-bold">{value}</p>
+            <div className='grid grid-cols-4 items-center mt-40  w-fit mx-auto p-2 text-center relative shadow-md rounded-xl'>
+                <p className=" absolute -top-8 right-5 text-2xl font-bold">{showValue}</p>
                 <p className="num_box">%</p>
                 <p className="num_box">CE</p>
                 <p className="num_box"
@@ -39,14 +86,18 @@ const Table = () => {
                     C
                 </p>
                 <p className="num_box"
-                    onClick={() => deleteValue(value)}
+                    onClick={() => deleteValue(showValue)}
                 >
                     delete
                 </p>
                 <p className="num_box">num</p>
                 <p className="num_box">/</p>
                 <p className="num_box">*</p>
-                <p className="num_box">-</p>
+                <p className="num_box"
+                    onClick={() => minus()}
+                >
+                    -
+                </p>
                 <p className="num_box"
                     onClick={() => clickValueBtn("7")}
                 >
@@ -62,7 +113,11 @@ const Table = () => {
                 >
                     9
                 </p>
-                <p className="num_box row-span-2 h-full">+</p>
+                <p className="num_box row-span-2 h-full"
+                    onClick={() => plus()}
+                >
+                    +
+                </p>
                 <p className="num_box"
                     onClick={() => clickValueBtn("4")}
                 >
@@ -99,7 +154,11 @@ const Table = () => {
                 >
                     0
                 </p>
-                <p className="num_box">.</p>
+                <p className="num_box"
+                    onClick={() => addDot()
+                    }>
+                    .
+                </p>
             </div>
         </>
 
