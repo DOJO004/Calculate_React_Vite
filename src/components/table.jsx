@@ -97,8 +97,11 @@ const Table = () => {
 
     // 按下百分比
     const percentage = () => {
-        const lastValue = showValue.split(/(\+|\-|\*|\/)/)
-        console.log();
+        const splitValue = showValue.split(/(\+|\-|\*|\/)/)
+        const lastValue = splitValue[splitValue.length - 1]
+        splitValue[splitValue.length - 1] = lastValue / 100
+        const result = splitValue.join("")
+        setShowValue(result)
     }
 
     // 按下 enter 計算答案
